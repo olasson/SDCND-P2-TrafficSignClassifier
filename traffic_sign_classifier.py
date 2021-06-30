@@ -2,11 +2,14 @@
 import cv2
 import numpy as np
 import argparse
+import random
+from pandas import read_csv
 from os.path import join as path_join
 
+
 # Custom imports
-from code.misc import file_exists, folder_guard, folder_is_empty, parse_file_path
-from code.io import load_config, glob_images
+from code.misc import file_exists, folder_guard, folder_is_empty, get_random_samples
+from code.io import load_config, load_pickled_data
 from code.plots import plot_images
 
 FOLDER_DATA = './data'
@@ -67,9 +70,16 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        '--n_max_images',
+        type = int,
+        default = 25,
+        help = 'The maximum number of images in the image plot.'
+    )
+
+    parser.add_argument(
         '--n_max_cols',
         type = int,
-        default = 3,
+        default = 5,
         help = 'The maximum number of columns in the image plot.'
     )
 
@@ -109,6 +119,12 @@ if __name__ == "__main__":
     # Init values
 
     n_max_cols = args.n_max_cols
+    n_max_images = args.n_max_images
+
+    X_train, y_train = None, None
+    X_test, y_test = None, None
+    X_valid, y_valid = None, None
+    y_metadata = None
 
     # Init flags
     
@@ -121,21 +137,42 @@ if __name__ == "__main__":
 
     folder_guard(FOLDER_DATA)
 
+    # Load data
+
+    if file_exists(file_path_train):
+        X_train, y_train = load_pickled_data(file_path_train)
+
+    if file_exists(file_path_test):
+        X_test, y_test = load_pickled_data(file_path_test)
+
+    if file_exists(file_path_valid):
+        X_valid, y_valid = load_pickled_data(file_path_valid)
+
+    if file_exists(file_path_meta):
+        y_metadata = read_csv(file_path_meta)['SignName']
+
+
+
     # Show images
 
     if flag_show_images:
 
-        if folder_is_empty(folder_path_images):
-            print(ERROR_PREFIX + 'You are trying to show a set of images but ' + folder_path_images + ' is empty or does not exist!')
-            exit()
+        if (X_train is not None):
+            print(INFO_PREFIX + 'Picking random samples from ' + file_path_train + '!')
+            X_samples, y_meta_samples = get_random_samples(X_train, y_train, y_metadata, n_max_samples = n_max_images)
+            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_train, n_max_cols = n_max_cols)
 
-        print(INFO_PREFIX + 'Showing images from folder: ' + folder_path_images)
+        if (X_test is not None):
+            print(INFO_PREFIX + 'Picking random samples from ' + file_path_test + '!')
+            X_samples, y_meta_samples = get_random_samples(X_test, y_test, y_metadata, n_max_samples = n_max_images)
+            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_test, n_max_cols = n_max_cols)
 
-        images, file_names = glob_images(folder_path_images)
+        if (X_valid is not None):
+            print(INFO_PREFIX + 'Picking random samples from ' + file_path_valid + '!')
+            X_samples, y_meta_samples = get_random_samples(X_valid, y_valid, y_metadata, n_max_samples = n_max_images)
+            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_valid, n_max_cols = n_max_cols)
 
-        plot_images(images, file_names, title_fig_window = folder_path_images, n_max_cols = n_max_cols)
 
-        exit()
 
 
 
