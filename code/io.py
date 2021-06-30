@@ -162,7 +162,7 @@ def glob_images(folder_path, n_max_images = 50):
 
 # Pickled
 
-def save_pickled_data(file_path, data1, data2, key1 = 'key1', key2 = 'key2'):
+def save_pickled_data(file_path, data1, data2, key1 = 'features', key2 = 'labels'):
     """
     Save two data files as a single pickled (.p) file. 
     
@@ -186,7 +186,7 @@ def save_pickled_data(file_path, data1, data2, key1 = 'key1', key2 = 'key2'):
     with open(file_path, mode = 'wb') as f:   
         pickle.dump(data, f, protocol = pickle.HIGHEST_PROTOCOL)
 
-def load_pickled_data(file_path, key1 = 'key1', key2 = 'key2'):
+def load_pickled_data(file_path, key1 = 'features', key2 = 'labels'):
     """
     Load a single pickled (.p) file into two numpy arrays.
     
