@@ -71,10 +71,7 @@ def plot_images(images,
     for i in range(n_images):
         plt.subplot(n_rows, n_cols, i + 1)
 
-        # Expect that images are loaded with openCV - BGR representation
-        image = cv2.cvtColor(images[i].astype('uint8'), cv2.COLOR_BGR2RGB)
-
-        plt.imshow(image, cmap = cmap)
+        plt.imshow(images[i].astype('uint8'), cmap = cmap)
 
         plt.xticks([])
         plt.yticks([])
