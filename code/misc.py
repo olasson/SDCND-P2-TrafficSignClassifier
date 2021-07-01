@@ -94,11 +94,12 @@ def parse_file_path(file_path):
 
     return folder_path, file_name
 
-def get_random_samples(X, y = None, y_metadata = None, n_max_samples = 25):
+def get_random_samples(X, y = None, y_metadata = None, indices = None, n_max_samples = 25):
 
     n_samples = len(X)
-
-    indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
+    
+    if indices is None:
+        indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
 
     n_samples = len(indices)
 
@@ -116,10 +117,11 @@ def get_random_samples(X, y = None, y_metadata = None, n_max_samples = 25):
         y_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
         
         for i, index in enumerate(indices):
-            X_samples[i] = X[index]  
+            X_samples[i] = X[index]
+            y_samples[i] = y[index]  
             y_metadata_samples[i] = y_metadata[y[index]]
 
-    return X_samples, y_metadata_samples
+    return X_samples, y_samples, y_metadata_samples
 
 
 
