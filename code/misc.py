@@ -94,12 +94,7 @@ def parse_file_path(file_path):
 
     return folder_path, file_name
 
-def get_random_samples(X, y = None, y_metadata = None, indices = None, n_max_samples = 25):
-
-    n_samples = len(X)
-    
-    if indices is None:
-        indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
+def pick_samples_X(X, indices):
 
     n_samples = len(indices)
 
@@ -107,21 +102,47 @@ def get_random_samples(X, y = None, y_metadata = None, indices = None, n_max_sam
 
     X_samples = np.zeros((n_samples,n_rows, n_cols, n_channels), dtype = np.uint8)
 
-
     for i, index in enumerate(indices):
         X_samples[i] = X[index]
 
-    if (y is not None) and (y_metadata is not None):
+    return X_samples
 
-        y_samples = np.zeros((n_samples), dtype = np.int)
+def pick_samples_y(y, indices, y_metadata = None):
+
+    n_samples = len(indices)
+
+    y_samples = np.zeros((n_samples), dtype = np.int)
+
+    for i, index in enumerate(indices):
+        y_samples[i] = y[index]
+
+    y_metadata_samples = None
+
+    if y_metadata is not None:
         y_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
-        
-        for i, index in enumerate(indices):
-            X_samples[i] = X[index]
-            y_samples[i] = y[index]  
-            y_metadata_samples[i] = y_metadata[y[index]]
+        for i in range(n_samples):
+            y_metadata_samples[i] = y_metadata[y_samples[i]]
+
+    return y_samples, y_metadata_samples
+
+def pick_random_samples(X, y, y_metadata, n_max_samples = 25):
+
+    n_samples = len(X)
+
+    indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
+
+    X_samples = pick_samples_X(X, indices)
+    y_samples, y_metadata_samples = pick_samples_y(y, indices, y_metadata)
 
     return X_samples, y_samples, y_metadata_samples
+
+
+
+        
+
+
+
+
 
 
 
