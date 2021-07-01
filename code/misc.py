@@ -105,13 +105,18 @@ def get_random_samples(X, y = None, y_metadata = None, n_max_samples = 25):
     n_rows, n_cols, n_channels = X[0].shape
 
     X_samples = np.zeros((n_samples,n_rows, n_cols, n_channels), dtype = np.uint8)
-    y_samples = np.zeros((n_samples), dtype = np.int)
-    y_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
+
 
     for i, index in enumerate(indices):
         X_samples[i] = X[index]
+
+    if (y is not None) and (y_metadata is not None):
+
+        y_samples = np.zeros((n_samples), dtype = np.int)
+        y_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
         
-        if (y is not None) and (y_metadata is not None):
+        for i, index in enumerate(indices):
+            X_samples[i] = X[index]  
             y_metadata_samples[i] = y_metadata[y[index]]
 
     return X_samples, y_metadata_samples
