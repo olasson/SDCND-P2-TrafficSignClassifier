@@ -8,9 +8,9 @@ from os.path import join as path_join
 
 
 # Custom imports
-from code.misc import file_exists, folder_guard, folder_is_empty, get_random_samples
+from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples
 from code.io import load_config, load_pickled_data
-from code.plots import plot_images
+from code.plots import plot_images, plot_distributions
 
 FOLDER_DATA = './data'
 
@@ -70,6 +70,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        '--distribution_title',
+        type = str,
+        nargs = '?',
+        default = 'Sign distribution.',
+        help = 'Title for the distribution plot',
+    )
+
+    parser.add_argument(
         '--n_max_images',
         type = int,
         default = 25,
@@ -121,6 +129,8 @@ if __name__ == "__main__":
     n_max_cols = args.n_max_cols
     n_max_images = args.n_max_images
 
+    distribution_title = args.distribution_title
+
     X_train, y_train = None, None
     X_test, y_test = None, None
     X_valid, y_valid = None, None
@@ -152,25 +162,30 @@ if __name__ == "__main__":
         y_metadata = read_csv(file_path_meta)['SignName']
 
 
-
     # Show images
 
     if flag_show_images:
 
         if (X_train is not None):
             print(INFO_PREFIX + 'Picking random samples from ' + file_path_train + '!')
-            X_samples, y_meta_samples = get_random_samples(X_train, y_train, y_metadata, n_max_samples = n_max_images)
+            X_samples, _, y_meta_samples = pick_random_samples(X_train, y_train, y_metadata, n_max_samples = n_max_images)
             plot_images(X_samples, y_meta_samples, title_fig_window = file_path_train, n_max_cols = n_max_cols)
 
         if (X_test is not None):
             print(INFO_PREFIX + 'Picking random samples from ' + file_path_test + '!')
-            X_samples, y_meta_samples = get_random_samples(X_test, y_test, y_metadata, n_max_samples = n_max_images)
+            X_samples, _, y_meta_samples = pick_random_samples(X_test, y_test, y_metadata, n_max_samples = n_max_images)
             plot_images(X_samples, y_meta_samples, title_fig_window = file_path_test, n_max_cols = n_max_cols)
 
         if (X_valid is not None):
             print(INFO_PREFIX + 'Picking random samples from ' + file_path_valid + '!')
-            X_samples, y_meta_samples = get_random_samples(X_valid, y_valid, y_metadata, n_max_samples = n_max_images)
+            X_samples, _, y_meta_samples = pick_random_samples(X_valid, y_valid, y_metadata, n_max_samples = n_max_images)
             plot_images(X_samples, y_meta_samples, title_fig_window = file_path_valid, n_max_cols = n_max_cols)
+
+    # Show distributions
+
+    if flag_show_distribution:
+        print(INFO_PREFIX + 'Showing sign label distribution(s)!')
+        plot_distributions(y_train, y_test, y_valid, y_metadata, title = distribution_title)
 
 
 
