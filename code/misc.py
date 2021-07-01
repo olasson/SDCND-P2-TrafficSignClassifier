@@ -94,6 +94,8 @@ def parse_file_path(file_path):
 
     return folder_path, file_name
 
+# Samples
+
 def pick_samples_X(X, indices):
 
     n_samples = len(indices)
@@ -135,6 +137,25 @@ def pick_random_samples(X, y, y_metadata, n_max_samples = 25):
     y_samples, y_metadata_samples = pick_samples_y(y, indices, y_metadata)
 
     return X_samples, y_samples, y_metadata_samples
+
+def distribution_is_uniform(y): 
+
+    if y is None:
+        return True
+
+    is_uniform = True
+    
+    classes, classes_count = np.unique(y, return_counts = True)
+
+    class_ref_count = classes_count[0]
+
+    for class_count in classes_count:
+
+        if class_count != class_ref_count:
+            is_uniform = False
+            break
+
+    return is_uniform
 
 
 
