@@ -9,10 +9,12 @@ from os.path import join as path_join
 
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples
-from code.io import load_config, load_pickled_data
+from code.io import load_config, load_pickled_data, save_pickled_data
 from code.plots import plot_images, plot_distributions
+from code.process import pre_process
 
 FOLDER_DATA = './data'
+FOLDER_MODELS = './models'
 
 INFO_PREFIX = 'INFO_MAIN: '
 WARNING_PREFIX = 'WARNING_MAIN: '
@@ -146,6 +148,7 @@ if __name__ == "__main__":
     # Folder setup
 
     folder_guard(FOLDER_DATA)
+    folder_guard(FOLDER_MODELS)
 
     # Load data
 
@@ -161,6 +164,11 @@ if __name__ == "__main__":
     if file_exists(file_path_meta):
         y_metadata = read_csv(file_path_meta)['SignName']
 
+    # Check
+
+    if (X_train is None) and (X_test is None) and (X_valid is None):
+        print(ERROR_PREFIX + 'You have provided no data!')
+        exit()
 
     # Show images
 
@@ -187,7 +195,58 @@ if __name__ == "__main__":
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
         plot_distributions(y_train, y_test, y_valid, y_metadata, title = distribution_title)
 
+    if model_config is not None:
 
+        print(INFO_PREFIX + 'Using config file: ' + file_path_model_config)
+
+        # Paths
+
+        file_path_train_prepared = model_config["data_train"]
+        file_path_test_prepared = model_config["data_test"]
+        file_path_valid_prepared = model_config["data_valid"]
+
+        file_path_model = model_config["model_name"]
+
+        # Flags
+
+        flag_mirror_data = model_config["mirror_data"]
+        flag_transform_data = model_config["transform_data"]
+
+        if file_exists(file_path_train_prepared):
+            pass
+
+
+        # Train
+
+        if not file_exists(file_path_train_prepared):
+
+            if flag_mirror_data:
+                print(INFO_PREFIX + 'Mirroring training data!')
+
+            if flag_transform_data:
+                print(INFO_PREFIX + 'Applying random transforms to training data!')
+
+            print(INFO_PREFIX + 'Pre-processing training data!')
+            X_train = pre_process(X_train)
+            save_pickled_data(file_path_train_prepared, X_train, y_train)
+
+        # Test
+
+        if not file_exists(file_path_test_prepared):
+            print(INFO_PREFIX + 'Pre-processing test data!')
+            X_test = pre_process(X_test)
+            save_pickled_data(file_path_test_prepared, X_test, y_test)
+        
+        # Valid
+
+        if not file_exists(file_path_valid_prepared):
+            print(INFO_PREFIX + 'Pre-processing validation data!')
+            X_valid = pre_process(X_valid)
+            save_pickled_data(file_path_valid_prepared, X_valid, y_valid)
+
+
+
+        
 
 
 
