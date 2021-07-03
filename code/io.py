@@ -212,7 +212,21 @@ def load_pickled_data(file_path, key1 = 'features', key2 = 'labels'):
 
     return data1, data2
 
+def load_labels(file_paths):
 
+    try:
+        _, y1 = load_pickled_data(file_paths[0])
+    except:
+        y1 = None
 
+    try:
+        _, y2 = load_pickled_data(file_paths[1])
+    except:
+        y2 = None
 
+    try:
+        _, y3 = load_pickled_data(file_paths[2])
+    except:
+        y3 = None
 
+    return y1, y2, y3
