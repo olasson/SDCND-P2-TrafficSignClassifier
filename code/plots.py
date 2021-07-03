@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from code.misc import pick_samples_y, distribution_is_uniform
+from code.misc import pick_samples_labels, distribution_is_uniform
 
 N_IMAGES_MAX = 50
 
@@ -91,24 +91,24 @@ def plot_images(X,
     plt.tight_layout()
     plt.show()
 
-def plot_distributions(y_train, y_test, y_valid, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
+def plot_distributions(y1, y2, y3, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
     
     order_index = 1
 
-    if distribution_is_uniform(y_train):
-        if (y_test is not None):
+    if distribution_is_uniform(y1):
+        if (y2 is not None):
             order_index = 2
-        elif (y_valid is not None):
+        elif (y3 is not None):
             order_index = 3
 
 
     # The distribution chosen here determines the order of the labels on the y-axis
     if order_index == 1:
-        classes, classes_count_order = np.unique(y_train, return_counts = True)
+        classes, classes_count_order = np.unique(y1, return_counts = True)
     elif order_index == 2:
-        classes, classes_count_order = np.unique(y_test, return_counts = True)
+        classes, classes_count_order = np.unique(y2, return_counts = True)
     else:
-        classes, classes_count_order = np.unique(y_valid, return_counts = True)
+        classes, classes_count_order = np.unique(y3, return_counts = True)
 
     # To make the plot tidy: 
     # ensure that the order of classes fits a reverse sort of 'classes_count_order'
@@ -128,19 +128,19 @@ def plot_distributions(y_train, y_test, y_valid, y_metadata = None, title = None
 
     plt.figure(figsize = fig_size)
 
-    if y_train is not None:
-        _, classes_count = np.unique(y_train, return_counts = True)
-        classes_count, _ = pick_samples_y(classes_count, classes_order)
+    if y1 is not None:
+        _, classes_count = np.unique(y1, return_counts = True)
+        classes_count, _ = pick_samples_labels(classes_count, classes_order)
         plt.barh(classes, classes_count, color = 'tab:blue')
 
-    if y_test is not None:
-        _, classes_count = np.unique(y_test, return_counts = True)
-        classes_count, _ = pick_samples_y(classes_count, classes_order)
+    if y2 is not None:
+        _, classes_count = np.unique(y2, return_counts = True)
+        classes_count, _ = pick_samples_labels(classes_count, classes_order)
         plt.barh(classes, classes_count, color = 'tab:orange')
 
-    if y_valid is not None:
-        _, classes_count = np.unique(y_valid, return_counts = True)
-        classes_count, _ = pick_samples_y(classes_count, classes_order)
+    if y3 is not None:
+        _, classes_count = np.unique(y3, return_counts = True)
+        classes_count, _ = pick_samples_labels(classes_count, classes_order)
         plt.barh(classes, classes_count, color = 'tab:green')
 
     plt.yticks(classes, y_ticks, fontsize = font_size)

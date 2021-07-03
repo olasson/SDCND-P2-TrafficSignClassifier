@@ -49,7 +49,7 @@ def folder_guard(folder_path):
 
 def folder_is_empty(folder_path):
     """
-    Check if a folder is empty. If the folder does not exist, it counts as being empty. 
+    Check if a folder is emptlabels. If the folder does not exist, it counts as being empty. 
     
     Inputs
     ----------
@@ -76,14 +76,14 @@ def parse_file_path(file_path):
     Inputs
     ----------
     file_path: string
-        Path to a file - './path/to/myfile.jpg'
+        Path to a file - './path/to/mlabelsfile.jpg'
         
     Outputs
     -------
     folder_path: string
         The folder path contained in 'file_path' - './path/to/'
     file_name: string
-        The file_name contained in 'file_path' - 'myfile.jpg'
+        The file_name contained in 'file_path' - 'mlabelsfile.jpg'
     """
 
     file_name = os.path.basename(file_path)
@@ -96,56 +96,56 @@ def parse_file_path(file_path):
 
 # Samples
 
-def pick_samples_X(X, indices):
+def pick_samples_images(images, indices):
 
     n_samples = len(indices)
 
-    n_rows, n_cols, n_channels = X[0].shape
+    n_rows, n_cols, n_channels = images[0].shape
 
-    X_samples = np.zeros((n_samples,n_rows, n_cols, n_channels), dtype = np.uint8)
+    images_samples = np.zeros((n_samples,n_rows, n_cols, n_channels), dtype = np.uint8)
 
     for i, index in enumerate(indices):
-        X_samples[i] = X[index]
+        images_samples[i] = images[index]
 
-    return X_samples
+    return images_samples
 
-def pick_samples_y(y, indices, y_metadata = None):
+def pick_samples_labels(labels, indices, labels_metadata = None):
 
     n_samples = len(indices)
 
-    y_samples = np.zeros((n_samples), dtype = np.int)
+    labels_samples = np.zeros((n_samples), dtype = np.int)
 
     for i, index in enumerate(indices):
-        y_samples[i] = y[index]
+        labels_samples[i] = labels[index]
 
-    y_metadata_samples = None
+    labels_metadata_samples = None
 
-    if y_metadata is not None:
-        y_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
+    if labels_metadata is not None:
+        labels_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
         for i in range(n_samples):
-            y_metadata_samples[i] = y_metadata[y_samples[i]]
+            labels_metadata_samples[i] = labels_metadata[labels_samples[i]]
 
-    return y_samples, y_metadata_samples
+    return labels_samples, labels_metadata_samples
 
-def pick_random_samples(X, y, y_metadata, n_max_samples = 25):
+def pick_random_samples(images, labels, labels_metadata, n_max_samples = 25):
 
-    n_samples = len(X)
+    n_samples = len(images)
 
     indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
 
-    X_samples = pick_samples_X(X, indices)
-    y_samples, y_metadata_samples = pick_samples_y(y, indices, y_metadata)
+    images_samples = pick_samples_images(images, indices)
+    labels_samples, labels_metadata_samples = pick_samples_labels(labels, indices, labels_metadata)
 
-    return X_samples, y_samples, y_metadata_samples
+    return images_samples, labels_samples, labels_metadata_samples
 
-def distribution_is_uniform(y): 
+def distribution_is_uniform(labels): 
 
-    if y is None:
+    if labels is None:
         return True
 
     is_uniform = True
     
-    classes, classes_count = np.unique(y, return_counts = True)
+    classes, classes_count = np.unique(labels, return_counts = True)
 
     class_ref_count = classes_count[0]
 
