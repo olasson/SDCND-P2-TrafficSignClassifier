@@ -16,6 +16,10 @@ from code.process import pre_process
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
 
+FILE_PATH_RAW_TRAIN = './data/train.p'
+FILE_PATH_RAW_TEST = './data/test.p'
+FILE_PATH_RAW_VALID = './data/valid.p'
+
 INFO_PREFIX = 'INFO_MAIN: '
 WARNING_PREFIX = 'WARNING_MAIN: '
 ERROR_PREFIX = 'ERROR_MAIN: '
@@ -28,30 +32,6 @@ if __name__ == "__main__":
     # Data
 
     parser.add_argument(
-        '--data_train',
-        type = str,
-        nargs = '?',
-        default = '',
-        help = 'File path to a pickled data file containing training data.',
-    )
-
-    parser.add_argument(
-        '--data_test',
-        type = str,
-        nargs = '?',
-        default = '',
-        help = 'File path to a pickled data file containing testing data.',
-    )
-
-    parser.add_argument(
-        '--data_valid',
-        type = str,
-        nargs = '?',
-        default = '',
-        help = 'File path to a pickled data file validation training data.',
-    )
-
-    parser.add_argument(
         '--data_meta',
         type = str,
         nargs = '?',
@@ -61,8 +41,10 @@ if __name__ == "__main__":
 
     parser.add_argument(
         '--show_images',
-        action = 'store_true',
-        help = 'Shows a set or subset of images of provided data sets.'
+        type = str,
+        nargs = '?',
+        default = None,
+        help = 'File path to a pickled (.p) file containing a set of images.',
     )
 
     parser.add_argument(
@@ -117,10 +99,9 @@ if __name__ == "__main__":
 
     file_path_model_config = args.model_config
 
-    file_path_train = args.data_train
-    file_path_test = args.data_test
-    file_path_valid = args.data_valid
     file_path_meta = args.data_meta
+
+    file_path_images = args.show_images
 
     # Init config
 
@@ -152,42 +133,18 @@ if __name__ == "__main__":
 
     # Load data
 
-    if file_exists(file_path_train):
-        X_train, y_train = load_pickled_data(file_path_train)
-
-    if file_exists(file_path_test):
-        X_test, y_test = load_pickled_data(file_path_test)
-
-    if file_exists(file_path_valid):
-        X_valid, y_valid = load_pickled_data(file_path_valid)
-
     if file_exists(file_path_meta):
         y_metadata = read_csv(file_path_meta)['SignName']
-
-    # Check
-
-    if (X_train is None) and (X_test is None) and (X_valid is None):
-        print(ERROR_PREFIX + 'You have provided no data!')
-        exit()
-
+    
     # Show images
 
-    if flag_show_images:
+    if file_path_images is not None:
+        print(INFO_PREFIX + 'Showing images from :' + file_path_images)
+        X, y = load_pickled_data(file_path_images)
+        X_samples, _, y_meta_samples = pick_random_samples(X, y, y_metadata, n_max_samples = n_max_images)
+        plot_images(X_samples, y_meta_samples, title_fig_window = file_path_images, n_max_cols = n_max_cols)
 
-        if (X_train is not None):
-            print(INFO_PREFIX + 'Picking random samples from ' + file_path_train + '!')
-            X_samples, _, y_meta_samples = pick_random_samples(X_train, y_train, y_metadata, n_max_samples = n_max_images)
-            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_train, n_max_cols = n_max_cols)
-
-        if (X_test is not None):
-            print(INFO_PREFIX + 'Picking random samples from ' + file_path_test + '!')
-            X_samples, _, y_meta_samples = pick_random_samples(X_test, y_test, y_metadata, n_max_samples = n_max_images)
-            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_test, n_max_cols = n_max_cols)
-
-        if (X_valid is not None):
-            print(INFO_PREFIX + 'Picking random samples from ' + file_path_valid + '!')
-            X_samples, _, y_meta_samples = pick_random_samples(X_valid, y_valid, y_metadata, n_max_samples = n_max_images)
-            plot_images(X_samples, y_meta_samples, title_fig_window = file_path_valid, n_max_cols = n_max_cols)
+        exit()
 
     # Show distributions
 
@@ -220,6 +177,8 @@ if __name__ == "__main__":
 
         if not file_exists(file_path_train_prepared):
 
+            X_train, y_train = load_pickled_data(FILE_PATH_RAW_TRAIN)
+
             if flag_mirror_data:
                 print(INFO_PREFIX + 'Mirroring training data!')
 
@@ -234,6 +193,7 @@ if __name__ == "__main__":
 
         if not file_exists(file_path_test_prepared):
             print(INFO_PREFIX + 'Pre-processing test data!')
+            X_test, y_test = load_pickled_data(FILE_PATH_RAW_TEST)
             X_test = pre_process(X_test)
             save_pickled_data(file_path_test_prepared, X_test, y_test)
         
@@ -241,6 +201,7 @@ if __name__ == "__main__":
 
         if not file_exists(file_path_valid_prepared):
             print(INFO_PREFIX + 'Pre-processing validation data!')
+            X_valid, y_valid = load_pickled_data(FILE_PATH_RAW_VALID)
             X_valid = pre_process(X_valid)
             save_pickled_data(file_path_valid_prepared, X_valid, y_valid)
 
