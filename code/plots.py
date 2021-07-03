@@ -58,11 +58,20 @@ def plot_images(X,
 
 def plot_distributions(distributions, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
 
+    def _remove_none(distributions):
+        res = []
+        for distribution in distributions:
+            if distribution is not None:
+                res.append(distribution)
+        return res
+
     n_distributions = len(distributions)
 
     if n_distributions > N_DISTRIBUTIONS_MAX:
         print("ERROR: code.plot.plot_distributions(): You're trying to show", n_distributions, "images. Max number of allowed images:", N_DISTRIBUTIONS_MAX)
         return
+
+    distributions = _remove_none(distributions)
 
     distributions = sorted(distributions, key=len, reverse=True)
     
