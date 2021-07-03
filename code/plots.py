@@ -23,45 +23,9 @@ def plot_images(X,
             titles_bottom_h_align = 'center', 
             titles_bottom_v_align = 'top', 
             titles_bottom_pos = (16, 32)):
-    """
-    Show a set of X
-    
-    Inputs
-    ----------
-    X : numpy.ndarray
-        A set of images, RGB or grayscale
-    titles_top: (None | list)
-        A set of image titles to be displayed on top of an image
-    titles_bottom: (None | list)
-        A set of image titles to be displayed at the bottom of an image
-    title_fig_window: (None | string)
-        Title for the figure window
-    figsize: (int, int)
-        Tuple specifying figure width and height in inches
-    fontsize: int
-        Fontsize of 'titles_top' and 'titles_bottom'
-    cmap: (None | string)
-        RGB or grayscale
-    n_max_cols: int
-        Maximum number of columns allowed in figure
-    titles_bottom_h_align: string
-        Horizontal alignment of 'titles_bottom'
-    titles_bottom_v_align: string
-        Vertical alignment of 'titles_bottom'
-    titles_bottom_pos: (int, int)
-        Tuple containing the position of 'titles_bottom'
-    titles_bottom_transform: string
-        Coordinate system used by matplotlib for 'titles_bottom'
-    Outputs
-    -------
-    plt.figure
-        Figure showing 'X' in an (n_rows x n_cols) layout
-    
-    """
 
     n_images = len(X)
 
-    # Stop myself from accidentally trying to show 30,000 X
     if n_images > N_IMAGES_MAX:
         print("ERROR: code.plot.plot_images(): You're trying to show", n_images, "images. Max number of allowed images:", N_IMAGES_MAX)
         return
@@ -96,7 +60,6 @@ def plot_distributions(distributions, y_metadata = None, title = None, fig_size 
 
     n_distributions = len(distributions)
 
-    # Stop myself from accidentally trying to show 30,000 X
     if n_distributions > N_DISTRIBUTIONS_MAX:
         print("ERROR: code.plot.plot_distributions(): You're trying to show", n_distributions, "images. Max number of allowed images:", N_DISTRIBUTIONS_MAX)
         return
