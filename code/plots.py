@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from code.misc import pick_samples_labels, distribution_is_uniform
 
 N_IMAGES_MAX = 50
+N_DISTRIBUTIONS_MAX = 3
 
 def plot_images(X, 
             titles_top = None, 
@@ -91,24 +92,26 @@ def plot_images(X,
     plt.tight_layout()
     plt.show()
 
-def plot_distributions(y1, y2, y3, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
+def plot_distributions(distributions, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
+
+    n_distributions = len(distributions)
+
+    # Stop myself from accidentally trying to show 30,000 X
+    if n_distributions > N_DISTRIBUTIONS_MAX:
+        print("ERROR: code.plot.plot_distributions(): You're trying to show", n_distributions, "images. Max number of allowed images:", N_DISTRIBUTIONS_MAX)
+        return
+
+    distributions = sorted(distributions, key=len, reverse=True)
     
-    order_index = 1
+    order_index = 0
 
-    if distribution_is_uniform(y1):
-        if (y2 is not None):
+    if distribution_is_uniform(distributions[0]):
+        if len(distributions) > 1:
+            order_index = 1
+        elif len(distributions) > 2:
             order_index = 2
-        elif (y3 is not None):
-            order_index = 3
 
-
-    # The distribution chosen here determines the order of the labels on the y-axis
-    if order_index == 1:
-        classes, classes_count_order = np.unique(y1, return_counts = True)
-    elif order_index == 2:
-        classes, classes_count_order = np.unique(y2, return_counts = True)
-    else:
-        classes, classes_count_order = np.unique(y3, return_counts = True)
+    classes, classes_count_order = np.unique(distributions[order_index], return_counts = True)
 
     # To make the plot tidy: 
     # ensure that the order of classes fits a reverse sort of 'classes_count_order'
@@ -117,7 +120,6 @@ def plot_distributions(y1, y2, y3, y_metadata = None, title = None, fig_size = (
 
     n_classes = len(classes)
     
-
     if y_metadata is not None:
         y_ticks = np.empty((n_classes), dtype = 'U25')
         for i in range(n_classes):
@@ -128,20 +130,12 @@ def plot_distributions(y1, y2, y3, y_metadata = None, title = None, fig_size = (
 
     plt.figure(figsize = fig_size)
 
-    if y1 is not None:
-        _, classes_count = np.unique(y1, return_counts = True)
-        classes_count, _ = pick_samples_labels(classes_count, classes_order)
-        plt.barh(classes, classes_count, color = 'tab:blue')
+    colors = ['tab:blue', 'tab:orange', 'tab:green']
 
-    if y2 is not None:
-        _, classes_count = np.unique(y2, return_counts = True)
+    for i, distribution in enumerate(distributions):
+        _, classes_count = np.unique(distribution, return_counts = True)
         classes_count, _ = pick_samples_labels(classes_count, classes_order)
-        plt.barh(classes, classes_count, color = 'tab:orange')
-
-    if y3 is not None:
-        _, classes_count = np.unique(y3, return_counts = True)
-        classes_count, _ = pick_samples_labels(classes_count, classes_order)
-        plt.barh(classes, classes_count, color = 'tab:green')
+        plt.barh(classes, classes_count, color = colors[i])
 
     plt.yticks(classes, y_ticks, fontsize = font_size)
 
