@@ -145,8 +145,7 @@ if __name__ == "__main__":
         X, y = load_pickled_data(file_path_images)
         X_samples, _, y_meta_samples = pick_random_samples(X, y, y_metadata, n_max_samples = n_max_images)
         plot_images(X_samples, y_meta_samples, title_fig_window = file_path_images, n_max_cols = n_max_cols)
-
-        exit()
+        X, y, X_samples, y_samples = None, None, None, None
 
     # Show distributions
 
@@ -154,6 +153,7 @@ if __name__ == "__main__":
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
         y1, y2, y3 = load_labels(file_path_distributions)
         plot_distributions(y1, y2, y3, y_metadata, title = distribution_title)
+        y1, y2, y3 = None, None, None
 
     if model_config is not None:
 
@@ -191,6 +191,9 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Pre-processing training data!')
             X_train = pre_process(X_train)
             save_pickled_data(file_path_train_prepared, X_train, y_train)
+        else:
+            print(INFO_PREFIX + 'Loading prepared training data!')
+            X_train, y_train = load_pickled_data(file_path_train_prepared)
 
         # Test
 
@@ -199,6 +202,9 @@ if __name__ == "__main__":
             X_test, y_test = load_pickled_data(FILE_PATH_RAW_TEST)
             X_test = pre_process(X_test)
             save_pickled_data(file_path_test_prepared, X_test, y_test)
+        else:
+            print(INFO_PREFIX + 'Loading prepared testing data!')
+            X_test, y_test = load_pickled_data(file_path_test_prepared)
         
         # Valid
 
@@ -207,6 +213,9 @@ if __name__ == "__main__":
             X_valid, y_valid = load_pickled_data(FILE_PATH_RAW_VALID)
             X_valid = pre_process(X_valid)
             save_pickled_data(file_path_valid_prepared, X_valid, y_valid)
+        else:
+            print(INFO_PREFIX + 'Loading prepared validation data!')
+            X_valid, y_valid = load_pickled_data(file_path_valid_prepared)
 
 
 
