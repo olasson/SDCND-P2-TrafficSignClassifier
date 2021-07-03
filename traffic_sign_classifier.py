@@ -9,7 +9,7 @@ from os.path import join as path_join
 
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples
-from code.io import load_config, load_pickled_data, save_pickled_data
+from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
 from code.plots import plot_images, plot_distributions
 from code.process import pre_process
 
@@ -48,9 +48,11 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        '--show_distribution',
-        action = 'store_true',
-        help = 'Shows the label distribution(s) of provided data sets.'
+        '--show_distributions',
+        type = str,
+        nargs = '+',
+        default = None,
+        help = 'File path(s) to pickled file(s) containing a label set.',
     )
 
     parser.add_argument(
@@ -102,6 +104,7 @@ if __name__ == "__main__":
     file_path_meta = args.data_meta
 
     file_path_images = args.show_images
+    file_path_distributions = args.show_distributions #if (args.show_distributions is None) else args.show_distributions
 
     # Init config
 
@@ -114,15 +117,14 @@ if __name__ == "__main__":
 
     distribution_title = args.distribution_title
 
-    X_train, y_train = None, None
-    X_test, y_test = None, None
-    X_valid, y_valid = None, None
+    #X_train, y_train = None, None
+    #X_test, y_test = None, None
+    #X_valid, y_valid = None, None
     y_metadata = None
+
 
     # Init flags
     
-    flag_show_images = args.show_images
-    flag_show_distribution = args.show_distribution
 
     flag_force_save = args.force_save
 
@@ -148,9 +150,10 @@ if __name__ == "__main__":
 
     # Show distributions
 
-    if flag_show_distribution:
+    if file_path_distributions is not None:
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
-        plot_distributions(y_train, y_test, y_valid, y_metadata, title = distribution_title)
+        y1, y2, y3 = load_labels(file_path_distributions)
+        plot_distributions(y1, y2, y3, y_metadata, title = distribution_title)
 
     if model_config is not None:
 
