@@ -6,6 +6,7 @@ This file contains function(s) for visualizing data.
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from os.path import join as path_join
 
 from code.misc import pick_samples_labels, distribution_is_uniform
 
@@ -120,3 +121,73 @@ def plot_distributions(distributions, y_metadata = None, title = None, fig_size 
 
     plt.show()
 
+
+def plot_model_history(model_name, history, file_path_save = None, lrn_rate = None, batch_size = None, max_epochs = None):
+
+
+    train_log = history.history['loss']
+    valid_log = history.history['val_loss']
+    
+    train_loss = train_log[-1]
+    valid_loss = valid_log[-1]
+    
+    text = "Training/Validation Loss: " + str(round(train_loss, 3)) + '/' + str(round(valid_loss, 3))   
+    
+    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+    
+    c1 = colors[0]
+    c2 = colors[1]
+    
+    fig, ax1 = plt.subplots(figsize = (9, 6))
+    
+    ax1.set_xlabel('Epochs')    
+    ax1.set_ylabel('Loss')
+
+    x = np.arange(1, len(train_log) + 1)
+    
+    ax1.plot(x, train_log, label = 'Train Loss', color = c1)
+    ax1.plot(x, valid_log, label = 'Validation Loss', color = c2)
+
+
+    stopping_epoch = len(history.history['loss'])
+
+    # ---------- Construct a title for the plot ---------- # 
+
+    model_name_title = 'Model Name: '+ model_name + ' | '
+
+    if lrn_rate is not None:
+        lrn_rate_title = 'Lrn rate: ' + str(lrn_rate) + ' | '
+    else:
+        lrn_rate_title = ''
+
+    if batch_size is not None:
+        batch_size_title = 'Batch size: ' + str(batch_size) + ' | '
+    else:
+        batch_size_title = ''
+
+    if max_epochs is not None:
+        epochs_title = 'Stopp/Max (Epoch): ' + str(stopping_epoch) + '/' + str(max_epochs)
+    else:
+        epochs_title = 'Stopp Epoch: ' + str(stopping_epoch)
+
+    plt.title(model_name_title + lrn_rate_title + batch_size_title + epochs_title)
+
+    # ---------- Misc ---------- #
+    
+    fig.text(0.5, 0, text,
+                verticalalignment = 'top', 
+                horizontalalignment = 'center',
+                color = 'black', fontsize = 10)
+    
+    handles, labels = ax1.get_legend_handles_labels()
+    
+    fig.legend(handles, labels, loc = (0.7, 0.5))
+    fig.tight_layout()
+
+    # ---------- Show or save ---------- #
+    
+    # If the user has opted to save the model history, don't show the plot directly
+    if file_path_save is not None:
+        fig.savefig(path_join(file_path_save, model_name + '.png'), bbox_inches = 'tight')
+    else:
+        plt.show()
