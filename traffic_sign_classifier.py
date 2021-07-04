@@ -10,7 +10,7 @@ from os.path import join as path_join
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, parse_file_path
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
-from code.plots import plot_images, plot_distributions
+from code.plots import plot_images, plot_distributions, plot_model_history
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
 from code.models import train_model, save_model, load_model, evaluate_model
@@ -226,6 +226,10 @@ if __name__ == "__main__":
         file_path_model = model_config["model_name"]
         batch_size = model_config["batch_size"]
 
+        # Get model name without extension
+        model_name = parse_file_path(file_path_model)[1]
+        model_name = model_name[:len(model_name) - 3]
+
         if not file_exists(file_path_model):
             
             lrn_rate = model_config["lrn_rate"]
@@ -234,17 +238,23 @@ if __name__ == "__main__":
             model, history = train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size)
 
             if model is None:
-                model_name = parse_file_path(file_path_model)[1]
                 print(ERROR_PREFIX + 'Unknown model type! The model name: ' + model_name + ' must contain the substring LeNet or VGG16!')
                 exit()
-
             save_model(file_path_model, model)
+
+            plot_model_history(model_name, history, FOLDER_MODELS, lrn_rate, batch_size, n_max_epochs)
 
         else:
             print(INFO_PREFIX + 'Loading model: ' + file_path_model)
             model = load_model(file_path_model)
 
         evaluate_model(model, X_test, y_test, batch_size)
+
+        # Predict on test images
+
+
+
+        # Predict on web images
 
 
         
