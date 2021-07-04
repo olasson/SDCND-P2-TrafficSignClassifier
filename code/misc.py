@@ -76,14 +76,14 @@ def parse_file_path(file_path):
     Inputs
     ----------
     file_path: string
-        Path to a file - './path/to/mlabelsfile.jpg'
+        Path to a file - './path/to/myfile.jpg'
         
     Outputs
     -------
     folder_path: string
         The folder path contained in 'file_path' - './path/to/'
     file_name: string
-        The file_name contained in 'file_path' - 'mlabelsfile.jpg'
+        The file_name contained in 'file_path' - 'myfile.jpg'
     """
 
     file_name = os.path.basename(file_path)
@@ -156,6 +156,9 @@ def distribution_is_uniform(labels):
             break
 
     return is_uniform
+
+
+
 
 
 
