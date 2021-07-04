@@ -1,4 +1,5 @@
 *.pyc
 data/*
+models/*
 images/*
 test.py
