@@ -12,6 +12,7 @@ from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_sa
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
 from code.plots import plot_images, plot_distributions
 from code.process import pre_process
+from code.augment import augment_data_by_mirroring
 
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
@@ -152,7 +153,7 @@ if __name__ == "__main__":
     if file_path_distributions is not None:
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
         y1, y2, y3 = load_labels(file_path_distributions)
-        plot_distributions(y1, y2, y3, y_metadata, title = distribution_title)
+        plot_distributions([y1, y2, y3], y_metadata, title = distribution_title)
         y1, y2, y3 = None, None, None
 
     if model_config is not None:
@@ -172,9 +173,6 @@ if __name__ == "__main__":
         flag_mirror_data = model_config["mirror_data"]
         flag_transform_data = model_config["transform_data"]
 
-        if file_exists(file_path_train_prepared):
-            pass
-
 
         # Train
 
@@ -184,6 +182,14 @@ if __name__ == "__main__":
 
             if flag_mirror_data:
                 print(INFO_PREFIX + 'Mirroring training data!')
+
+                MIRROR_MAP = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+                              -1, 11, 12, 13, -1, 15, -1, 17, 18, 20,
+                              19, -1, 22, -1, -1, -1, 26, -1, -1, -1,
+                              30, -1, -1, 34, 33, 35, 37, 36, 39, 38,
+                              -1, -1, -1]
+                              
+                X_train, y_train = augment_data_by_mirroring(X_train, y_train, MIRROR_MAP)
 
             if flag_transform_data:
                 print(INFO_PREFIX + 'Applying random transforms to training data!')
