@@ -8,11 +8,12 @@ from os.path import join as path_join
 
 
 # Custom imports
-from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples
+from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, parse_file_path
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
 from code.plots import plot_images, plot_distributions
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
+from code.models import train_model, save_model, load_model
 
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
@@ -105,7 +106,7 @@ if __name__ == "__main__":
     file_path_meta = args.data_meta
 
     file_path_images = args.show_images
-    file_path_distributions = args.show_distributions #if (args.show_distributions is None) else args.show_distributions
+    file_path_distributions = args.show_distributions
 
     # Init config
 
@@ -118,9 +119,6 @@ if __name__ == "__main__":
 
     distribution_title = args.distribution_title
 
-    #X_train, y_train = None, None
-    #X_test, y_test = None, None
-    #X_valid, y_valid = None, None
     y_metadata = None
 
 
@@ -166,15 +164,14 @@ if __name__ == "__main__":
         file_path_test_prepared = model_config["data_test"]
         file_path_valid_prepared = model_config["data_valid"]
 
-        file_path_model = model_config["model_name"]
-
         # Flags
 
         flag_mirror_data = model_config["mirror_data"]
         flag_transform_data = model_config["transform_data"]
 
 
-        # Train
+
+        # Training data
 
         if not file_exists(file_path_train_prepared):
 
@@ -202,7 +199,7 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Loading prepared training data!')
             X_train, y_train = load_pickled_data(file_path_train_prepared)
 
-        # Test
+        # Testing data
 
         if not file_exists(file_path_test_prepared):
             print(INFO_PREFIX + 'Pre-processing test data!')
@@ -213,7 +210,7 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Loading prepared testing data!')
             X_test, y_test = load_pickled_data(file_path_test_prepared)
         
-        # Valid
+        # Validation data
 
         if not file_exists(file_path_valid_prepared):
             print(INFO_PREFIX + 'Pre-processing validation data!')
@@ -223,6 +220,29 @@ if __name__ == "__main__":
         else:
             print(INFO_PREFIX + 'Loading prepared validation data!')
             X_valid, y_valid = load_pickled_data(file_path_valid_prepared)
+
+        # Model
+
+        file_path_model = model_config["model_name"]
+
+        if not file_exists(file_path_model):
+            
+            lrn_rate = model_config["lrn_rate"]
+            n_max_epochs = model_config["n_max_epochs"]
+            batch_size = model_config["batch_size"]
+
+            model, history = train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size)
+
+            if model is None:
+                model_name = parse_file_path(file_path_model)[1]
+                print(ERROR_PREFIX + 'Unknown model type! The model name: ' + model_name + ' must contain the substring LeNet or VGG16!')
+                exit()
+
+            save_model(file_path_model, model)
+
+        else:
+            print(INFO_PREFIX + 'Loading model: ' + file_path_model)
+            model = load_model(file_path_model)
 
 
 
