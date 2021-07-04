@@ -178,3 +178,7 @@ def save_model(file_path, model):
 
     model.save(file_path)
 
+def evaluate_model(model, X_test, y_test, batch_size):
+
+    model.evaluate(X_test, y_test, batch_size = batch_size)
+

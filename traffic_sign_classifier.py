@@ -13,7 +13,7 @@ from code.io import load_config, load_pickled_data, save_pickled_data, load_labe
 from code.plots import plot_images, plot_distributions
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
-from code.models import train_model, save_model, load_model
+from code.models import train_model, save_model, load_model, evaluate_model
 
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
@@ -224,12 +224,12 @@ if __name__ == "__main__":
         # Model
 
         file_path_model = model_config["model_name"]
+        batch_size = model_config["batch_size"]
 
         if not file_exists(file_path_model):
             
             lrn_rate = model_config["lrn_rate"]
             n_max_epochs = model_config["n_max_epochs"]
-            batch_size = model_config["batch_size"]
 
             model, history = train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size)
 
@@ -244,6 +244,7 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Loading model: ' + file_path_model)
             model = load_model(file_path_model)
 
+        evaluate_model(model, X_test, y_test, batch_size)
 
 
         
