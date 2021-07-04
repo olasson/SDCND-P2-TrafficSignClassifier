@@ -12,7 +12,7 @@ from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_sa
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
 from code.plots import plot_images, plot_distributions
 from code.process import pre_process
-from code.augment import augment_data_by_mirroring
+from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
 
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     if file_path_distributions is not None:
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
         y1, y2, y3 = load_labels(file_path_distributions)
-        plot_distributions([y1, y2, y3], y_metadata, title = distribution_title)
+        plot_distributions([y1, y2, y3], y_metadata, title = distribution_title, title_fig_window = 'label_distributions')
         y1, y2, y3 = None, None, None
 
     if model_config is not None:
@@ -193,6 +193,7 @@ if __name__ == "__main__":
 
             if flag_transform_data:
                 print(INFO_PREFIX + 'Applying random transforms to training data!')
+                X_train, y_train = augment_data_by_random_transform(X_train, y_train)
 
             print(INFO_PREFIX + 'Pre-processing training data!')
             X_train = pre_process(X_train)
