@@ -2,6 +2,8 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+import numpy as np
+
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Sequential
@@ -21,6 +23,7 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.2
 config.gpu_options.allow_growth = True
 session = InteractiveSession(config = config)
 
+from code.misc import pick_samples_1D
 
 def LeNet():
     """
@@ -181,4 +184,51 @@ def save_model(file_path, model):
 def evaluate_model(model, X_test, y_test, batch_size):
 
     model.evaluate(X_test, y_test, batch_size = batch_size)
+
+def predict_signs(model, X, y_metadata, indices, top_k = 5):
+
+    predictions = model.predict(X)
+
+    #print(predictions[0])
+
+    #predictions = pick_samples_1D(predictions, indices)
+
+    #return None
+
+    signs = []
+
+    for i, index in enumerate(indices):
+        prediction = predictions[index]
+
+        top_k_predictions  = prediction.argsort()[-top_k:][::-1]
+        top_k_probabilities = np.sort(prediction)[-top_k:][::-1]
+
+        y_metadata_samples = pick_samples_1D(y_metadata, top_k_predictions, dtype = 'U25')
+
+        sign = ''
+        for k, prob in enumerate(top_k_probabilities):
+            sign += y_metadata_samples[k] + " " + "P:" + str(prob) + "\n"
+
+        signs.append(sign)
+
+    return signs
+
+
+    for prediction in predictions:
+        top_k_predictions  = prediction.argsort()[-top_k:][::-1]
+        top_k_probabilities = np.sort(prediction)[-top_k:][::-1]
+
+        labels_subset = data_pick_subset(labels, top_k_predictions)
+
+        title = ''
+        for k, prob in enumerate(top_k_probabilities):
+            title += labels_subset[k] + " " + "P:" + str(prob) + "\n"
+
+        titles.append(title)
+
+    return titles
+
+
+
+    #return None
 
