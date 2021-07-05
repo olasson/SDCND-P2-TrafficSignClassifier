@@ -8,12 +8,12 @@ from os.path import join as path_join
 
 
 # Custom imports
-from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, parse_file_path
+from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, pick_samples_images, parse_file_path
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
-from code.plots import plot_images, plot_distributions, plot_model_history
+from code.plots import plot_images, plot_distributions, plot_model_history, plot_predicitons
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
-from code.models import train_model, save_model, load_model, evaluate_model
+from code.models import train_model, save_model, load_model, evaluate_model, predict_signs
 
 FOLDER_DATA = './data'
 FOLDER_MODELS = './models'
@@ -228,7 +228,7 @@ if __name__ == "__main__":
 
         # Get model name without extension
         model_name = parse_file_path(file_path_model)[1]
-        model_name = model_name[:len(model_name) - 3]
+        model_name = model_name[:len(model_name) - len('.h5')]
 
         if not file_exists(file_path_model):
             
@@ -248,9 +248,24 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Loading model: ' + file_path_model)
             model = load_model(file_path_model)
 
-        evaluate_model(model, X_test, y_test, batch_size)
+        #evaluate_model(model, X_test, y_test, batch_size)
 
         # Predict on test images
+
+        X_test_raw, _ = load_pickled_data(FILE_PATH_RAW_TEST)
+
+        n_images = len(X_test)
+
+        indices = np.random.randint(0, n_images, min(n_images, n_max_images))
+
+        signs = predict_signs(model, X_test, y_metadata, indices)
+
+        X_pred = pick_samples_images(X_test_raw, indices)
+
+        plot_predicitons(X_pred, signs, model_name, n_max_cols = 3)
+
+
+
 
 
 
