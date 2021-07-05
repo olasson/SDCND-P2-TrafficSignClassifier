@@ -57,6 +57,12 @@ def plot_images(X,
     plt.tight_layout()
     plt.show()
 
+
+def plot_predicitons(images, signs, model_name, n_max_cols = 5):
+
+    plot_images(images, titles_bottom = signs, title_fig_window = 'Predictions by model: ' + model_name, 
+                font_size = 12, n_max_cols = n_max_cols, titles_bottom_h_align = 'left', titles_bottom_pos = (34, 7.0))
+
 def plot_distributions(distributions, y_metadata = None, title = None, title_fig_window = None, fig_size = (15, 10), font_size = 6):
 
     def _remove_none(distributions):
