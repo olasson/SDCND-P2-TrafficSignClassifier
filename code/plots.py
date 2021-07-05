@@ -58,7 +58,7 @@ def plot_images(X,
     plt.show()
 
 
-def plot_predicitons(images, signs, model_name, n_max_cols = 5):
+def plot_predictions(images, signs, model_name, n_max_cols = 5):
 
     plot_images(images, titles_bottom = signs, title_fig_window = 'Predictions by model: ' + model_name, 
                 font_size = 12, n_max_cols = n_max_cols, titles_bottom_h_align = 'left', titles_bottom_pos = (34, 7.0))

@@ -10,7 +10,7 @@ from os.path import join as path_join
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, pick_samples_images, parse_file_path
 from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
-from code.plots import plot_images, plot_distributions, plot_model_history, plot_predicitons
+from code.plots import plot_images, plot_distributions, plot_model_history, plot_predictions
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
 from code.models import train_model, save_model, load_model, evaluate_model, predict_signs
@@ -262,7 +262,7 @@ if __name__ == "__main__":
 
         X_pred = pick_samples_images(X_test_raw, indices)
 
-        plot_predicitons(X_pred, signs, model_name, n_max_cols = 3)
+        plot_predictions(X_pred, signs, model_name, n_max_cols = 3)
 
 
 
