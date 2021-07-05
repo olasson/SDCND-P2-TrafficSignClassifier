@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from os.path import join as path_join
 
-from code.misc import pick_samples_labels, distribution_is_uniform
+from code.misc import pick_samples_1D, distribution_is_uniform
 
 N_IMAGES_MAX = 50
 N_DISTRIBUTIONS_MAX = 3
@@ -57,7 +57,7 @@ def plot_images(X,
     plt.tight_layout()
     plt.show()
 
-def plot_distributions(distributions, y_metadata = None, title = None, fig_size = (15, 10), font_size = 6):
+def plot_distributions(distributions, y_metadata = None, title = None, title_fig_window = None, fig_size = (15, 10), font_size = 6):
 
     def _remove_none(distributions):
         res = []
@@ -101,13 +101,13 @@ def plot_distributions(distributions, y_metadata = None, title = None, fig_size 
         y_ticks = classes_order
 
 
-    plt.figure(figsize = fig_size)
+    plt.figure(title_fig_window, figsize = fig_size)
 
     colors = ['tab:blue', 'tab:orange', 'tab:green']
 
     for i, distribution in enumerate(distributions):
         _, classes_count = np.unique(distribution, return_counts = True)
-        classes_count, _ = pick_samples_labels(classes_count, classes_order)
+        classes_count = pick_samples_1D(classes_count, classes_order, dtype = np.int)
         plt.barh(classes, classes_count, color = colors[i])
 
     plt.yticks(classes, y_ticks, fontsize = font_size)

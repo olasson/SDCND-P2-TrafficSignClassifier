@@ -109,32 +109,29 @@ def pick_samples_images(images, indices):
 
     return images_samples
 
-def pick_samples_labels(labels, indices, labels_metadata = None):
+def pick_samples_1D(arr, indices, dtype = np.float32):
 
     n_samples = len(indices)
 
-    labels_samples = np.zeros((n_samples), dtype = np.int)
+    arr_samples = np.zeros((n_samples), dtype = dtype)
 
     for i, index in enumerate(indices):
-        labels_samples[i] = labels[index]
+        arr_samples[i] = arr[index]
 
-    labels_metadata_samples = None
+    return arr_samples
 
-    if labels_metadata is not None:
-        labels_metadata_samples = np.zeros((n_samples), dtype = 'U25') # String
-        for i in range(n_samples):
-            labels_metadata_samples[i] = labels_metadata[labels_samples[i]]
 
-    return labels_samples, labels_metadata_samples
-
-def pick_random_samples(images, labels, labels_metadata, n_max_samples = 25):
+def pick_random_samples(images, labels, labels_metadata = None, n_max_samples = 25):
 
     n_samples = len(images)
 
     indices = np.random.randint(0, n_samples, min(n_samples, n_max_samples))
 
     images_samples = pick_samples_images(images, indices)
-    labels_samples, labels_metadata_samples = pick_samples_labels(labels, indices, labels_metadata)
+    labels_samples = pick_samples_1D(labels, indices, dtype = np.int)
+
+    if labels_metadata is not None:
+        labels_metadata_samples = pick_samples_1D(labels_metadata, labels_samples, dtype = 'U25')
 
     return images_samples, labels_samples, labels_metadata_samples
 
