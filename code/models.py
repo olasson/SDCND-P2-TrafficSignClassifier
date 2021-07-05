@@ -213,22 +213,3 @@ def predict_signs(model, X, y_metadata, indices, top_k = 5):
 
     return signs
 
-
-    for prediction in predictions:
-        top_k_predictions  = prediction.argsort()[-top_k:][::-1]
-        top_k_probabilities = np.sort(prediction)[-top_k:][::-1]
-
-        labels_subset = data_pick_subset(labels, top_k_predictions)
-
-        title = ''
-        for k, prob in enumerate(top_k_probabilities):
-            title += labels_subset[k] + " " + "P:" + str(prob) + "\n"
-
-        titles.append(title)
-
-    return titles
-
-
-
-    #return None
-
