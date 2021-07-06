@@ -8,6 +8,7 @@ import pickle
 import numpy as np
 from glob import glob
 from os.path import join as path_join
+from os.path import splitext
 
 # Custom imports
 from code.misc import parse_file_path
@@ -129,7 +130,7 @@ def glob_file_paths(folder_path, n_max_samples = None, file_ext = '.png'):
 
     return file_paths
 
-def glob_images(folder_path, n_max_images = 50):
+def load_web_data(folder_path, n_max_images = 50):
     """
     Load a set of file paths from a folder or nested folders.
     
@@ -151,14 +152,21 @@ def glob_images(folder_path, n_max_images = 50):
         Numpy array containing the file names (not full paths) of the file paths found ing 'folder_path.
         
     """
-    file_paths = glob_file_paths(folder_path, n_max_samples = 50, file_ext = '.png')
+    file_paths = glob_file_paths(folder_path, n_max_samples = n_max_images, file_ext = '.png')
 
     if len(file_paths) == 0:
-        file_paths = glob_file_paths(folder_path, n_max_samples = 50, file_ext = '.jpg')
+        file_paths = glob_file_paths(folder_path, n_max_samples = n_max_images, file_ext = '.jpg')
 
     images, file_names = _load_images(file_paths)
 
-    return images, file_names
+    n_labels = len(file_names)
+
+    labels = np.zeros((n_labels), dtype = np.int)
+
+    for i in range(n_labels):
+        labels[i] = np.int(splitext(file_names[i])[0])
+
+    return images, labels
 
 # Pickled
 
