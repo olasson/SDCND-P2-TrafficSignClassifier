@@ -8,8 +8,8 @@ from os.path import join as path_join
 
 
 # Custom imports
-from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, pick_samples_images, parse_file_path
-from code.io import load_config, load_pickled_data, save_pickled_data, load_labels
+from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, pick_samples_images, parse_file_path, bgr_to_rgb
+from code.io import load_config, load_pickled_data, save_pickled_data, load_labels, load_web_data
 from code.plots import plot_images, plot_distributions, plot_model_history, plot_predictions
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
@@ -21,6 +21,8 @@ FOLDER_MODELS = './models'
 FILE_PATH_RAW_TRAIN = './data/train.p'
 FILE_PATH_RAW_TEST = './data/test.p'
 FILE_PATH_RAW_VALID = './data/valid.p'
+
+FOLDER_PATH_RAW_WEB = './images/tests'
 
 INFO_PREFIX = 'INFO_MAIN: '
 WARNING_PREFIX = 'WARNING_MAIN: '
@@ -248,7 +250,7 @@ if __name__ == "__main__":
             print(INFO_PREFIX + 'Loading model: ' + file_path_model)
             model = load_model(file_path_model)
 
-        #evaluate_model(model, X_test, y_test, batch_size)
+        evaluate_model(model, X_test, y_test, batch_size)
 
         # Predict on test images
 
@@ -262,14 +264,25 @@ if __name__ == "__main__":
 
         X_pred = pick_samples_images(X_test_raw, indices)
 
-        plot_predictions(X_pred, signs, model_name, n_max_cols = 3)
-
-
-
-
-
+        plot_predictions(X_pred, signs, model_name, n_max_cols = n_max_cols)
 
         # Predict on web images
+
+        X_web_raw, y_web = load_web_data(FOLDER_PATH_RAW_WEB)
+
+        X_web = pre_process(X_web_raw)
+
+        n_images = len(X_web)
+
+        indices = range(n_images)
+
+        signs = predict_signs(model, X_web, y_metadata, indices)
+
+        X_web_raw = bgr_to_rgb(X_web_raw)
+
+        plot_predictions(X_web_raw, signs, model_name, n_max_cols = n_max_cols)
+
+
 
 
         
