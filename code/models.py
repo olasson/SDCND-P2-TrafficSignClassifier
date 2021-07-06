@@ -189,12 +189,6 @@ def predict_signs(model, X, y_metadata, indices, top_k = 5):
 
     predictions = model.predict(X)
 
-    #print(predictions[0])
-
-    #predictions = pick_samples_1D(predictions, indices)
-
-    #return None
-
     signs = []
 
     for i, index in enumerate(indices):
