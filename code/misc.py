@@ -4,6 +4,7 @@ This file contains some miscellaneous helper functions and os wrappers.
 
 import os
 import numpy as np
+import cv2
 
 def file_exists(file_path):
     """
@@ -153,6 +154,15 @@ def distribution_is_uniform(labels):
             break
 
     return is_uniform
+
+def bgr_to_rgb(images):
+
+    images_out = np.zeros_like(images)
+
+    for i in range(len(images)):
+        images_out[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+
+    return images_out
 
 
 
