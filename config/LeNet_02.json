@@ -1,5 +1,5 @@
 {
-    "model_name": "./models/LeNet_02.h5",
+    "model_path": "./models/LeNet_02.h5",
     "data_train": "./data/prepared_train_mirrored.p",
     "data_test": "./data/prepared_test.p",
     "data_valid": "./data/prepared_valid.p",
