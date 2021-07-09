@@ -16,7 +16,7 @@ from code.augment import augment_data_by_mirroring, augment_data_by_random_trans
 from code.models import train_model, save_model, load_model, evaluate_model, predict_signs
 
 FOLDER_DATA = './data'
-FOLDER_MODELS = './models'
+FOLDER_IMAGES = './images/readme'
 
 FILE_PATH_RAW_TRAIN = './data/train.p'
 FILE_PATH_RAW_TEST = './data/test.p'
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         '--distribution_title',
         type = str,
         nargs = '?',
-        default = 'Sign distribution.',
+        default = 'Sign distribution(s).',
         help = 'Title for the distribution plot',
     )
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--n_max_cols',
         type = int,
-        default = 5,
+        default = 3,
         help = 'The maximum number of columns in the image plot.'
     )
 
@@ -132,7 +132,6 @@ if __name__ == "__main__":
     # Folder setup
 
     folder_guard(FOLDER_DATA)
-    folder_guard(FOLDER_MODELS)
 
     # Load data
 
@@ -225,7 +224,7 @@ if __name__ == "__main__":
 
         # Model
 
-        file_path_model = model_config["model_name"]
+        file_path_model = model_config["model_path"]
         batch_size = model_config["batch_size"]
 
         # Get model name without extension
@@ -244,13 +243,15 @@ if __name__ == "__main__":
                 exit()
             save_model(file_path_model, model)
 
-            plot_model_history(model_name, history, FOLDER_MODELS, lrn_rate, batch_size, n_max_epochs)
+
+            file_path_save = path_join(FOLDER_IMAGES, model_name + '.png')
+            plot_model_history(history, model_name, lrn_rate, batch_size, n_max_epochs, file_path_save)
 
         else:
             print(INFO_PREFIX + 'Loading model: ' + file_path_model)
             model = load_model(file_path_model)
 
-        evaluate_model(model, X_test, y_test, batch_size)
+        _ = evaluate_model(model, X_test, y_test, batch_size)
 
         # Predict on test images
 
@@ -264,7 +265,9 @@ if __name__ == "__main__":
 
         X_pred = pick_samples_images(X_test_raw, indices)
 
-        plot_predictions(X_pred, signs, model_name, n_max_cols = n_max_cols)
+
+        file_path_save = path_join(FOLDER_IMAGES, 'test_set_predictions_by_' + model_name + '.png')
+        plot_predictions(X_pred, signs, n_max_cols = n_max_cols, file_path_save = file_path_save)
 
         # Predict on web images
 
@@ -280,7 +283,8 @@ if __name__ == "__main__":
 
         X_web_raw = bgr_to_rgb(X_web_raw)
 
-        plot_predictions(X_web_raw, signs, model_name, n_max_cols = n_max_cols)
+        file_path_save = path_join(FOLDER_IMAGES, 'web_set_predictions_by_' + model_name + '.png')
+        plot_predictions(X_web_raw, signs, n_max_cols = n_max_cols, file_path_save = file_path_save)
 
 
 
