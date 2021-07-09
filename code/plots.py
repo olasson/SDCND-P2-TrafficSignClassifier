@@ -13,7 +13,7 @@ from code.misc import pick_samples_1D, distribution_is_uniform
 N_IMAGES_MAX = 50
 N_DISTRIBUTIONS_MAX = 3
 
-def plot_images(X, 
+def plot_images(images, 
             titles_top = None, 
             titles_bottom = None, 
             title_fig_window = None, 
@@ -23,9 +23,10 @@ def plot_images(X,
             n_max_cols = 5, 
             titles_bottom_h_align = 'center', 
             titles_bottom_v_align = 'top', 
-            titles_bottom_pos = (16, 32)):
+            titles_bottom_pos = (16, 32),
+            file_path_save = None):
 
-    n_images = len(X)
+    n_images = len(images)
 
     if n_images > N_IMAGES_MAX:
         print("ERROR: code.plot.plot_images(): You're trying to show", n_images, "images. Max number of allowed images:", N_IMAGES_MAX)
@@ -39,7 +40,7 @@ def plot_images(X,
     for i in range(n_images):
         plt.subplot(n_rows, n_cols, i + 1)
 
-        plt.imshow(X[i].astype('uint8'), cmap = cmap)
+        plt.imshow(images[i].astype('uint8'), cmap = cmap)
 
         plt.xticks([])
         plt.yticks([])
@@ -55,13 +56,22 @@ def plot_images(X,
                      fontsize = font_size - 3)
 
     plt.tight_layout()
-    plt.show()
+
+    if file_path_save is not None:
+        fig_mgr = plt.get_current_fig_manager()
+        fig_mgr.window.showMaximized()
+        plt.show()
+        fig.savefig(file_path_save)
+        plt.close()
+    else:
+        plt.show()
 
 
-def plot_predictions(images, signs, model_name, n_max_cols = 5):
+def plot_predictions(images, signs, title_fig_window = None, n_max_cols = 3, file_path_save = None):
 
-    plot_images(images, titles_bottom = signs, title_fig_window = 'Predictions by model: ' + model_name, 
-                font_size = 12, n_max_cols = n_max_cols, titles_bottom_h_align = 'left', titles_bottom_pos = (34, 7.0))
+    plot_images(images, titles_bottom = signs, title_fig_window = title_fig_window, 
+                font_size = 12, n_max_cols = n_max_cols, titles_bottom_h_align = 'left', titles_bottom_pos = (34, 7.0),
+                file_path_save = file_path_save)
 
 def plot_distributions(distributions, y_metadata = None, title = None, title_fig_window = None, fig_size = (15, 10), font_size = 6):
 
@@ -128,8 +138,10 @@ def plot_distributions(distributions, y_metadata = None, title = None, title_fig
     plt.show()
 
 
-def plot_model_history(model_name, history, file_path_save = None, lrn_rate = None, batch_size = None, max_epochs = None):
+def plot_model_history(history, model_name = None, lrn_rate = None, batch_size = None, max_epochs = None, file_path_save = None,):
 
+    if model_name is None:
+        model_name = 'model'
 
     train_log = history.history['loss']
     valid_log = history.history['val_loss']
@@ -194,6 +206,7 @@ def plot_model_history(model_name, history, file_path_save = None, lrn_rate = No
     
     # If the user has opted to save the model history, don't show the plot directly
     if file_path_save is not None:
-        fig.savefig(path_join(file_path_save, model_name + '.png'), bbox_inches = 'tight')
+        fig.savefig(file_path_save, bbox_inches = 'tight')
+        plt.close()
     else:
         plt.show()
