@@ -183,7 +183,9 @@ def save_model(file_path, model):
 
 def evaluate_model(model, X_test, y_test, batch_size):
 
-    model.evaluate(X_test, y_test, batch_size = batch_size)
+    loss = model.evaluate(X_test, y_test, batch_size = batch_size)
+
+    return loss
 
 def predict_signs(model, X, y_metadata, indices, top_k = 5):
 
