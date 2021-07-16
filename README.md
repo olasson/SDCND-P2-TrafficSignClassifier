@@ -351,7 +351,7 @@ Overall, this model seems very accurate as it correctly identifies all web image
 
 ### VGG16_02
 
-This model is also less accurate than its first iteration. The dataset for this model was random transforms only. This dataset will not expose the model to the same "variation" of images as the full aguemented dataset.
+This model is also less accurate than its first iteration. The dataset for this model was random transforms only. This dataset will not expose the model to the same "variation" of images as the fully augmented dataset.
 
 <p align="center">
   <img width="80%" height="80%" src="https://github.com/olasson/SDCND-P2-TrafficSignClassifier/blob/master/images/readme/web_set_predictions_by_VGG16_02.png">
