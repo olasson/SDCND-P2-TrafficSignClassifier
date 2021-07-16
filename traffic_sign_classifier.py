@@ -40,8 +40,10 @@ if __name__ == "__main__":
         type = str,
         nargs = '?',
         default = './signnames.csv',
-        help = 'File path to a pickled data file containing meta data.',
+        help = 'File path to a .csv data file containing sign meta data.',
     )
+
+    # Show
 
     parser.add_argument(
         '--show_images',
