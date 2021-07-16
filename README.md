@@ -325,11 +325,15 @@ The results on random web images are shown below
 
 ### LeNet_01
 
+Overall, this model seems very accurate as it correctly identifies all web images. It was trained on the fully agumented dataset. 
+
 <p align="center">
   <img width="80%" height="80%" src="https://github.com/olasson/SDCND-P2-TrafficSignClassifier/blob/master/images/readme/web_set_predictions_by_LeNet_01.png">
 </p>
 
 ### LeNet_02
+
+This model is less accurate than its first iteration. The dataset for this model was mirrored only, which has a very uneven distribution of sign labels. The cause of the incorrect predictions might be overfitting. 
 
 <p align="center">
   <img width="80%" height="80%" src="https://github.com/olasson/SDCND-P2-TrafficSignClassifier/blob/master/images/readme/web_set_predictions_by_model_LeNet_02.png">
@@ -338,12 +342,16 @@ The results on random web images are shown below
 
 ### VGG16_01
 
+Overall, this model seems very accurate as it correctly identifies all web images. It was trained on the fully agumented dataset. 
+
 <p align="center">
   <img width="80%" height="80%" src="https://github.com/olasson/SDCND-P2-TrafficSignClassifier/blob/master/images/readme/web_set_predictions_by_VGG16_01.png">
 </p>
 
 
 ### VGG16_02
+
+This model is also less accurate than its first iteration. The dataset for this model was random transforms only. This dataset will not expose the model to the same "variation" of images as the full aguemented dataset.
 
 <p align="center">
   <img width="80%" height="80%" src="https://github.com/olasson/SDCND-P2-TrafficSignClassifier/blob/master/images/readme/web_set_predictions_by_VGG16_02.png">
