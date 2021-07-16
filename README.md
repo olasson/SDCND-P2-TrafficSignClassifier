@@ -310,14 +310,7 @@ This will prevent the training from running while no "meaningful" improvement in
 
 ## Results
 
-A simple naming standard was devised to differentiate the models: `<model_type>_<lrn_rate_decimals>_<batch_size>_<n_max_epochs>`. As an example, `VGG16_001_64_50` reads as *A VGG16 model trained with (lrn_rate = 0.001)  and (batch_size = 64) for a max 50 epochs*. Training can be stopped earlier, by the callback. 
-
-In terms of the command line tool there is one important difference. Since `VGG16` is the default, it is necessary to specify the model type for LeNet Example: 
-
-* `(...) --model_name  'VGG16_001_64_50' ` (Sufficient)
-* `(...) --model_name  'LeNet_001_64_50' --model_type 'LeNet' ` (Sufficient)
-
-Below is the results for all models trained. 
+Below is the results for all models trained. The models have very generic names, but any details can be found in their respective config file.
 
 | Model Name    | Stop Epoch/Max Epoch  | Evaluation Acc. | Validation Loss  |   
 | :---        |    :----:   |          ---: |          ---: |
