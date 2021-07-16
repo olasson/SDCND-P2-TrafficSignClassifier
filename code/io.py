@@ -220,21 +220,31 @@ def load_pickled_data(file_path, key1 = 'features', key2 = 'labels'):
 
     return data1, data2
 
-def load_labels(file_paths):
+def load_pickled_labels(file_paths):
+    """
+    Helper function to load pickled labels only. 
+    
+    Inputs
+    ----------
+    file_paths: str
+        File path(s) to pickled files.
+       
+    Outputs
+    -------
+    y1, y2, y3: numpy.ndarray, numpy.ndarray
+        Numpy arrays containing sign labels.
 
-    try:
-        _, y1 = load_pickled_data(file_paths[0])
-    except:
-        y1 = None
+    """
 
-    try:
+    # Always expect at least one file path
+    _, y1 = load_pickled_data(file_paths[0])
+
+    # Load "optional" labels
+    y2, y3 = None, None
+    if len(file_paths) == 2:
         _, y2 = load_pickled_data(file_paths[1])
-    except:
-        y2 = None
 
-    try:
-        _, y3 = load_pickled_data(file_paths[2])
-    except:
-        y3 = None
+        if len(file_paths) == 3:
+            _, y3 = load_pickled_data(file_paths[2])
 
     return y1, y2, y3

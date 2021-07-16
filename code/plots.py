@@ -26,6 +26,45 @@ def plot_images(images,
             titles_bottom_pos = (16, 32),
             file_path_save = None):
 
+    """
+    Show a set of images.
+    
+    Inputs
+    ----------
+    images: numpy.ndarray
+        Numpy array containing a set of images, RGB or grayscale.
+    titles_top: (None | list)
+        A set of image titles to be displayed on top of an image.
+    titles_bottom: (None | list)
+        A set of image titles to be displayed at the bottom of an image.
+    title_fig_window: (None | str)
+        Title for the figure window.
+    figsize: (int, int)
+        Tuple specifying figure width and height in inches.
+    fontsize: int
+        Fontsize of 'titles_top' and 'titles_bottom'.
+    cmap: (None | str)
+        RGB or grayscale.
+    n_max_cols: int
+        Maximum number of columns allowed in figure.
+    titles_bottom_h_align: str
+        Horizontal alignment of 'titles_bottom'.
+    titles_bottom_v_align: str
+        Vertical alignment of 'titles_bottom'.
+    titles_bottom_pos: (int, int)
+        Tuple containing the position of 'titles_bottom'.
+    titles_bottom_transform: str
+        Coordinate system used by matplotlib for 'titles_bottom'.
+    file_path_save: (None | str)
+        File path specifying where the figure should be saved.
+
+    Outputs
+    -------
+    plt.figure
+        Figure showing 'images' in an (n_rows x n_cols) layout.
+    
+    """
+
     n_images = len(images)
 
     if n_images > N_IMAGES_MAX:
@@ -68,12 +107,62 @@ def plot_images(images,
 
 
 def plot_predictions(images, signs, title_fig_window = None, n_max_cols = 3, file_path_save = None):
+    """
+    Show a set of model predictions.
+    
+    Inputs
+    ----------
+    images: numpy.ndarray
+        Numpy array containing a set of images, RGB or grayscale.
+    signs: numpy.ndarray
+        Numpy array containing a set of model predictions, corresponding to 'images'.
+    titles_bottom: (None | list)
+        A set of image titles to be displayed at the bottom of an image
+    title_fig_window: (None | str)
+        Title for the figure window
+    n_max_cols: int
+        Maximum number of columns allowed in figure
+    file_path_save: (None | str)
+        File path specifying where the figure should be saved
+
+    Outputs
+    -------
+    plt.figure
+        Figure showing 'images' in an (n_rows x n_cols) layout.
+
+    Notes
+    -------
+        See code.models.predict_signs().
+    
+    """
 
     plot_images(images, titles_bottom = signs, title_fig_window = title_fig_window, 
                 font_size = 12, n_max_cols = n_max_cols, titles_bottom_h_align = 'left', titles_bottom_pos = (34, 7.0),
                 file_path_save = file_path_save)
 
 def plot_distributions(distributions, y_metadata = None, title = None, title_fig_window = None, fig_size = (15, 10), font_size = 6):
+    """
+    Show label distribution
+    
+    Inputs
+    ----------
+    distributions: numpy.ndarray
+        Numpy array containing up to N_DISTRIBUTIONS_MAX set of labels - '[labels1, ... labelsN]'
+    title: (None | list)
+        A title for the figure.
+    title_fig_window: (None | str)
+        Title for the figure window.
+    figsize: (int, int)
+        Tuple specifying figure width and height in inches.
+    fontsize: int
+        Fontsize of 'title'
+        
+    Outputs
+    -------
+    plt.figure
+        Figure showing label class distribution(s)
+    
+    """
 
     def _remove_none(distributions):
         res = []
@@ -139,6 +228,30 @@ def plot_distributions(distributions, y_metadata = None, title = None, title_fig
 
 
 def plot_model_history(history, model_name = None, lrn_rate = None, batch_size = None, max_epochs = None, file_path_save = None,):
+    """
+    Plot model history and metadata
+    
+    Inputs
+    ----------
+    model_name: string
+        Name of the model
+    history: Keras History Object
+        Model history (output from .fit)
+    path_save: (None | string)
+        Path to where the plot will be saved. 
+    lrn_rate: (None | float)
+        Model learning rate
+    batch_size: (None | int)
+        Model batch size
+    max_epochs: (None | int)
+        Model max epochs 
+        
+    Outputs
+    -------
+    plt.figure
+        Figure showing model history and metadata, either shown directly or saved in location 'path_save'
+    
+    """
 
     if model_name is None:
         model_name = 'model'

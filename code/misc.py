@@ -44,6 +44,7 @@ def folder_guard(folder_path):
         N/A
         
     """
+    
     if not os.path.isdir(folder_path):
         print('INFO:folder_guard(): Creating folder: ' + folder_path + '...')
         os.mkdir(folder_path)
@@ -70,7 +71,6 @@ def folder_is_empty(folder_path):
     return True
 
 def parse_file_path(file_path):
-
     """
     Parse out the folder path and file path from a full path.
     
@@ -98,6 +98,21 @@ def parse_file_path(file_path):
 # Samples
 
 def pick_samples_images(images, indices):
+    """
+    Pick out certain samples from a set of images.
+    
+    Inputs
+    ----------
+    images: numpy.ndarray
+        Numpy array containing a set of images.
+    indices: numpy.ndarray
+        Numpy array containing a set of indices.
+        
+    Outputs
+    -------
+    images_samples: numpy.ndarray
+        Numpy array containing samples from 'images'.
+    """
 
     n_samples = len(indices)
 
@@ -111,6 +126,23 @@ def pick_samples_images(images, indices):
     return images_samples
 
 def pick_samples_1D(arr, indices, dtype = np.float32):
+    """
+    Pick out certain samples from a set of images.
+    
+    Inputs
+    ----------
+    arr: numpy.ndarray
+        Numpy array containing 1D data.
+    indices: numpy.ndarray
+        Numpy array containing a set of indices.
+    dtype: class.type
+        The desired data type of 'arr_samples'.
+        
+    Outputs
+    -------
+    images_samples: numpy.ndarray
+        Numpy array containing samples from 'images'.
+    """
 
     n_samples = len(indices)
 

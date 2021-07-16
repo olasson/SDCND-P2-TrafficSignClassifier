@@ -9,7 +9,7 @@ from os.path import join as path_join
 
 # Custom imports
 from code.misc import file_exists, folder_guard, folder_is_empty, pick_random_samples, pick_samples_images, parse_file_path, bgr_to_rgb
-from code.io import load_config, load_pickled_data, save_pickled_data, load_labels, load_web_data
+from code.io import load_config, load_pickled_data, save_pickled_data, load_pickled_labels, load_web_data
 from code.plots import plot_images, plot_distributions, plot_model_history, plot_predictions
 from code.process import pre_process
 from code.augment import augment_data_by_mirroring, augment_data_by_random_transform
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
     if file_path_distributions is not None:
         print(INFO_PREFIX + 'Showing sign label distribution(s)!')
-        y1, y2, y3 = load_labels(file_path_distributions)
+        y1, y2, y3 = load_pickled_labels(file_path_distributions)
         plot_distributions([y1, y2, y3], y_metadata, title = distribution_title, title_fig_window = 'label_distributions')
         y1, y2, y3 = None, None, None
 
@@ -227,7 +227,7 @@ if __name__ == "__main__":
         file_path_model = model_config["model_path"]
         batch_size = model_config["batch_size"]
 
-        # Get model name without extension
+        # Get model name
         model_name = parse_file_path(file_path_model)[1]
         model_name = model_name[:len(model_name) - len('.h5')]
 
@@ -236,11 +236,12 @@ if __name__ == "__main__":
             lrn_rate = model_config["lrn_rate"]
             n_max_epochs = model_config["n_max_epochs"]
 
-            model, history = train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size)
+            model, history = train_model(model_name, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size)
 
             if model is None:
-                print(ERROR_PREFIX + 'Unknown model type! The model name: ' + model_name + ' must contain the substring LeNet or VGG16!')
+                print(ERROR_PREFIX + 'Unknown model type! The model name: ' + model_name + ' must be LeNet or VGG16!')
                 exit()
+
             save_model(file_path_model, model)
 
 

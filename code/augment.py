@@ -1,5 +1,5 @@
 """
-This file contains functions for artificially creating more samples (augmenting) the dataset(s).
+This file contains functions for artificially creating more samples by augmenting the dataset(s).
 """
 
 import numpy as np
@@ -10,23 +10,25 @@ BORDER_PAD = 10 # [pixels]
 
 def augment_data_by_mirroring(images, labels, mirror_map, n_new_images_max = 1000):
     """
-    Augment a data set by creating new images by mirroring existing images
+    Augment a data set by creating new images by mirroring existing images.
+
     Inputs
     ----------
-    images : numpy.ndarray
-        A set of images
+    images: numpy.ndarray
+        Numpy array containing a set of images.
     labels: numpy.ndarray
-        A set of image classes
+        Numpy array containing a set of image classes.
     mirror_map: list or numpy.ndarray
         A mapping where 'Class i' is mirrored to imitate 'Class mirror_map[i]'
     n_new_images_max: int
-        The maximum number of new images created by mirroring
+        The maximum number of new images created by mirroring.
+
     Outputs
     -------
     mirrored_images: numpy.ndarray
-        A set of images with additional images
+        Numpy array containing a set of images with additional images.
     mirrored_labels: numpy.ndarray
-        A set of labels with updated count for each class
+        Numpy array containing a set of labels with updated count for each class.
     """
 
     classes, classes_count = np.unique(labels, return_counts = True)
@@ -69,15 +71,15 @@ def scale_image(image, scale_x, scale_y):
     
     Inputs
     ----------
-    image : numpy.ndarray
-        Array containing a single RGB image
+    image: numpy.ndarray
+        Numpy array containing a single RGB image.
     scale_x,scale_y: float, float
-        Scale coefficients in the x-dir and y-dir
+        Scale coefficients in the x-dir and y-dir.
         
     Outputs
     -------
     scaled_image: numpy.ndarray
-        Scaled image, dimensions preserved
+        Scaled image, dimensions preserved.
         
     """
 
@@ -102,19 +104,19 @@ def scale_image(image, scale_x, scale_y):
 
 def translate_image(image, T_x, T_y):
     """
-    Translate image scene
+    Translate image scene.
     
     Inputs
     ----------
-    image : numpy.ndarray
-        Array containing a single RGB image
+    image: numpy.ndarray
+        Numpy array containing a single RGB image.
     T_x,T_y: int, int
-        Translation in the x-dir and y-dir
+        Translation in the x-dir and y-dir.
        
     Outputs
     -------
     translated_image: numpy.ndarray
-        Translated image, dimensions preserved
+        Translated image, dimensions preserved.
         
     """
 
@@ -136,12 +138,13 @@ def perspective_transform(image, border_offset):
     
     Inputs
     ----------
-    image : numpy.ndarray
-        Array containing a single RGB image
+    image: numpy.ndarray
+        Numpy array containing single RGB image.
+
     Outputs
     -------
     perspective_image: numpy.ndarray
-        Image with changed perspective, dimensions preserved
+        Image with changed perspective, dimensions preserved.
         
     """  
     
@@ -168,7 +171,7 @@ def rotate_image(image, angle):
     
     Inputs
     ----------
-    image : numpy.ndarray
+    image: numpy.ndarray
         Numpy array containing a single RGB image
     angle: int
         Angle of rotation for image in degrees
@@ -194,18 +197,18 @@ def rotate_image(image, angle):
 
 def random_transforms(image, mask = None):
     """
-    Apply one or more random transformation(s) to an image
+    Apply one or more random transformation(s) to an image.
     
     Inputs
     ----------
-    image : numpy.ndarray
-        Array containing a single RGB image
+    image: numpy.ndarray
+        Numpy array containing a single RGB image.
     mask: (None | numpy.ndarray)
         Array with shape '(1,4)' for choosing transform(s). Useful for debugging.
     Outputs
     -------
     image: numpy.ndarray
-        Transformed image, dmensions preserved
+        Transformed image, dmensions preserved.
         
     """ 
 
@@ -238,21 +241,21 @@ def random_transforms(image, mask = None):
 
 def augment_data_by_random_transform(images, labels):
     """
-    Augment a data set by creating new samples from random transforms
+    Augment a data set by creating new samples from random transforms.
     
     Inputs
     ----------
-    images : numpy.ndarray
-        A set of images
+    images: numpy.ndarray
+        A set of images.
     labels: numpy.ndarray
-        A set of image classes
+        A set of image classes.
         
     Outputs
     -------
     augmented_images: numpy.ndarray
-        A set of images with additional samples
+        Numpy array containing additional samples.
     augmented_labels: numpy.ndarray
-        A set of classes with updated count for each class
+        Numpy array containing updated count for each class.
     """
     
     classes, classes_count = np.unique(labels, return_counts = True)

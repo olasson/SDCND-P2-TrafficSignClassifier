@@ -1,3 +1,7 @@
+"""
+This file contains all model architectures used in the project and relevant functions.
+"""
+
 # Suppress some of the "standard" tensorflow output
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -6,12 +10,8 @@ import numpy as np
 
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import BatchNormalization
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import MaxPooling2D, Activation, Flatten, Dropout
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Activation, Flatten, Dropout, BatchNormalization, Dense
 
 
 from tensorflow.compat.v1 import ConfigProto
@@ -35,7 +35,7 @@ def LeNet():
         
     Outputs
     -------
-    model : tf.keras.Sequential
+    model: tf.keras.Sequential
         LeNet model
     """
 
@@ -87,7 +87,7 @@ def VGG16():
         
     Outputs
     -------
-    model : tf.keras.Sequential
+    model: tf.keras.Sequential
         Custom model
     """
 
@@ -152,12 +152,41 @@ def VGG16():
     return model
 
 
-def train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size):
+def train_model(model_name, X_train, y_train, X_valid, y_valid, lrn_rate, n_max_epochs, batch_size):
+    """
+    Trains a model.
+    
+    Inputs
+    ----------
+    model_name: str
+        The name of the model, used to infer the desired model type.
+    X_train: numpy.ndarray
+        Numpy array containing a set of training images.
+    y_train: numpy.ndarray
+        Numpy array containing a set of training labels.
+    X_valid: numpy.ndarray
+        Numpy array containing a set of validation images.
+    y_valid: numpy.ndarray
+        Numpy array containing a set of validation labels.
+    lrn_rate: float
+        Model learning rate
+    n_max_epochs: int
+        The maximum number of epochs the model can train for.
 
-    if file_path_model.find("LeNet") != -1:
+       
+    Outputs
+    -------
+    model: tf.keras.Sequential
+        Trained model
+    history: Keras History Object
+        Model history object
+        
+    """
+
+    if model_name.find('LeNet') != -1:
         print("INFO: code.models.train_model(): Model type is LeNet!")
         model = LeNet()
-    elif file_path_model.find("VGG16") !=-1:
+    elif model_name.find('VGG16') != -1:
         print("INFO: code.models.train_model(): Model type is VGG16!")
         model = VGG16()
     else:
@@ -178,16 +207,56 @@ def train_model(file_path_model, X_train, y_train, X_valid, y_valid, lrn_rate, n
     return model, history
 
 def save_model(file_path, model):
+    """
+    
+    Wrapper for model.save
+
+    """
 
     model.save(file_path)
 
 def evaluate_model(model, X_test, y_test, batch_size):
+    """
+
+    Wrapper for model.evaluate
+
+    """
 
     loss = model.evaluate(X_test, y_test, batch_size = batch_size)
 
     return loss
 
 def predict_signs(model, X, y_metadata, indices, top_k = 5):
+    """
+    Trains a model.
+    
+    Inputs
+    ----------
+    model: tf.keras.Sequential
+        Trained model
+    X: numpy.ndarray
+        Numpy array containing a set of images.
+    y_metadata: numpy.ndarray
+        Numpy array containing label metadata.
+    indices: numpy.ndarray
+        Numpy array containing a set of indices.
+    y_valid: numpy.ndarray
+        Numpy array containing a set of validation labels.
+    top_k: int
+        The "top_k" probabilities for each image.
+
+       
+    Outputs
+    -------
+    signs: list
+        A set of image predictions.
+        
+
+    Notes
+    -------
+        See code.plots.plot_predictions().
+
+    """
 
     predictions = model.predict(X)
 
