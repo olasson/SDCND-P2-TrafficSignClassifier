@@ -294,7 +294,7 @@ All activation layers are of type `relu`, except for `activation_4` which is `so
 
 ### Training
 
-The user has the option to specify a couple of hyperparameters through the command line namely `lrn_rate`, `batch_size` and `max_epochs`. While the first two are fairly stright forward, `max_epochs` is, as the name implies, not necessarily the number of epochs training will run for. This is due to the Keras callback implemented like so
+The user has the option to specify a couple of hyperparameters through the model config file namely `lrn_rate`, `batch_size` and `max_epochs`. While the first two are fairly straight forward, `max_epochs` is, as the name implies, not necessarily the number of epochs training will run for. This is due to the Keras callback implemented:
     
     ...
     
